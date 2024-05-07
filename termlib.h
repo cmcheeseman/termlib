@@ -1,3 +1,5 @@
+#include <ncurses.h>
+
 typedef struct {
   int x;
   int y;

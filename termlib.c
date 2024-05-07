@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <ncurses.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
@@ -33,6 +33,7 @@ void getposes(framebuffer_t *target) {
 }
 
 framebuffer_t init() {
+  initscr();
   struct winsize w;
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
   char *chararr = malloc((w.ws_col * w.ws_row) + 1);
@@ -48,14 +49,16 @@ framebuffer_t init() {
 }
 
 void update(framebuffer_t target) {
-  printf("\e[1;1H\e[100J");
-  printf("%s", target.arr);
+//  printf("\e[1;1H\e[100J");
+//  printf("%s", target.arr);
+  printw("%s", target.arr);
+  refresh();
 }
 
 int setc(framebuffer_t target, int x, int y, char dat) {
   int total = (x - 1) + ((y - 1) * target.cols);
   if (total >= target.total) {
-    return 0;
+    return 1;
   }
   target.arr[total] = dat;
   return 0;
